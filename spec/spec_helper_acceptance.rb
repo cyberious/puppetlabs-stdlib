@@ -37,8 +37,8 @@ RSpec.shared_context "with faked facts" do
   let(:facts_d) do
     puppet_version = (on default, puppet('--version')).output.chomp
     if Puppet::Util::Package.versioncmp(puppet_version, '4.0.0') < 0 && fact('is_pe', '--puppet') == "true"
-      if fact('osfamily') =~ /windows/i
-        if fact('kernelmajversion').to_f < 6.0
+      if fact_on(default,'osfamily') =~ /windows/i
+        if fact_on(default,'kernelmajversion').to_f < 6.0
           'C:/Documents and Settings/All Users/Application Data/PuppetLabs/facter/facts.d'
         else
           'C:/ProgramData/PuppetLabs/facter/facts.d'
@@ -53,7 +53,7 @@ RSpec.shared_context "with faked facts" do
 
   before :each do
     #No need to create on windows, PE creates by default
-    if fact('osfamily') !~ /windows/i
+    if fact_on(default,'osfamily') !~ /windows/i
       shell("mkdir -p '#{facts_d}'")
     end
   end
